@@ -30,7 +30,7 @@ app.use('/api', routes);
 app.use('/api/*', notFound);
 
 // 5. Servi i file statici del frontend (la cartella dist di Vite)
-const clientBuildPath = path.join(__dirname, '../client/dist');
+const clientBuildPath = path.join(__dirname, '../../client/dist');
 app.use(express.static(clientBuildPath));
 
 // 6. Fallback per il Frontend: tutte le altre rotte restituiscono la tua app web
