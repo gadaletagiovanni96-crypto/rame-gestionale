@@ -11,7 +11,7 @@ import unavailability from './unavailability.routes.js';
 import availability from './availability.routes.js';
 
 // 1. Importa il modello User (verifica che il percorso sia corretto in base alle tue cartelle)
-import User from '../models/User.js'; 
+import {User} from '../models/User.js'; 
 
 const api = Router();
 
