@@ -1,4 +1,5 @@
 const TOKEN_KEY = 'token';
+
 export const tokenStore = { get: () => localStorage.getItem(TOKEN_KEY), set: t => localStorage.setItem(TOKEN_KEY, t), clear: () => localStorage.removeItem(TOKEN_KEY) };
 let onUnauthorized = () => {};
 export const setUnauthorizedHandler = fn => { onUnauthorized = fn; };
