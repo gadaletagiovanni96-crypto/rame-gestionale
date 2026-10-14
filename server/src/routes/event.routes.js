@@ -1,0 +1,13 @@
+import { Router } from 'express'; import * as c from '../controllers/event.controller.js';
+import { requireRole } from '../middleware/auth.js'; import { validate } from '../middleware/validate.js'; import { asyncHandler as h } from '../utils/asyncHandler.js';
+import { eventSchema, teamSchema, readySchema, busyQuery } from '../validators/index.js'; import { MANAGERS } from '../utils/constants.js';
+const r = Router(); const manager = requireRole(...MANAGERS);
+r.get('/', h(c.list));
+r.get('/busy', manager, validate(busyQuery, 'query'), h(c.busy));
+r.post('/', manager, validate(eventSchema), h(c.create));
+r.put('/:id', manager, validate(eventSchema), h(c.update));
+r.put('/:id/team', manager, validate(teamSchema), h(c.updateTeam));
+r.put('/:id/material-ready', manager, validate(readySchema), h(c.setMaterialReady));
+r.post('/:id/ack', h(c.ack));
+r.delete('/:id', manager, h(c.remove));
+export default r;
