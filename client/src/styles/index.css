@@ -21,9 +21,13 @@
   --radius-lg: 16px;
 }
 
-/* BASE */
+/* BASE: Previene sfasamenti e scroll orizzontali fantasma */
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html { -webkit-text-size-adjust: 100%; }
+html { 
+  -webkit-text-size-adjust: 100%; 
+  max-width: 100vw; 
+  overflow-x: hidden; 
+}
 body { 
   margin: 0; 
   background: var(--bg); 
@@ -32,6 +36,8 @@ body {
   overscroll-behavior-y: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  max-width: 100vw; 
+  overflow-x: hidden; 
 }
 
 h1, h2, h3 { font-family: 'Baloo 2', sans-serif; margin: .2em 0; color: var(--blu); line-height: 1.2; }
@@ -44,7 +50,7 @@ header {
   background: var(--blu); color: #fff; 
   border-bottom: 4px solid var(--giallo);
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  display: block; /* Fondamentale per separare .top e .groups su mobile */
+  display: block; /* Divide header su due blocchi su mobile */
   padding: 0; 
   padding-top: env(safe-area-inset-top);
 }
@@ -53,13 +59,12 @@ header {
   padding: 10px 14px; 
 }
 .top > b { font: 800 20px 'Baloo 2'; color: var(--giallo); margin: 0; }
+.top .logo { max-height: 30px; width: auto; object-fit: contain; }
 .spacer { flex: 1; }
 .who { display: none; font-weight: 600; font-size: 15px; }
 
 /* GRUPPI AREE (Gestione, Il mio spazio...) */
-.groups { 
-  display: flex; gap: 6px; padding: 0 14px 10px; 
-}
+.groups { display: flex; gap: 6px; padding: 0 14px 10px; }
 .groups a { 
   flex: 1; min-height: 40px; display: flex; align-items: center; justify-content: center; 
   border-radius: 12px; background: rgba(255,255,255,0.15); color: #fff; 
@@ -158,7 +163,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 @media(min-width: 700px){ .modal { align-items: center; } .sheet { max-width: 720px; border-radius: 20px; max-height: 90dvh; } }
 
-/* ACCORDIONS */
+/* ACCORDIONS (Menu a tendina) */
 .acc { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); margin: 10px 0; overflow: hidden; box-shadow: var(--shadow-sm); transition: all 0.3s ease; }
 .acc-h { display: flex; align-items: center; gap: 8px; padding: 0 6px 0 0; }
 .acc-t { flex: 1; display: flex; align-items: center; gap: 8px; min-height: 52px; background: none; color: var(--ink); border-radius: 0; padding: 6px 14px; font: 800 17px 'Baloo 2'; text-align: left; cursor: pointer; transition: color 0.2s; box-shadow: none; }
@@ -187,17 +192,42 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .pick.off { background: #fef2f2; border-color: #fca5a5; }
 .pick .grow { display: flex; flex-direction: column; gap: 4px; }
 
-/* CALENDARIO */
-.cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
-.cal .h { text-align: center; font-weight: 800; color: var(--mute); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; padding-bottom: 4px; }
-.day { min-height: 64px; background: #fff; color: var(--ink); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 4px; display: flex; flex-direction: column; align-items: center; gap: 4px; font: 700 14.5px Nunito; text-align: left; transition: all 0.2s; box-shadow: var(--shadow-sm); }
+/* CALENDARIO (Ottimizzato e a tenuta stagna per mobile) */
+.cal { 
+  display: grid; 
+  grid-template-columns: repeat(7, minmax(0, 1fr)); 
+  gap: 4px; 
+}
+.cal .h { 
+  text-align: center; font-weight: 800; color: var(--mute); 
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0; 
+  padding-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.day { 
+  min-height: 64px; background: #fff; color: var(--ink); 
+  border: 1px solid var(--line); border-radius: var(--radius-md); 
+  padding: 3px; display: flex; flex-direction: column; align-items: center; gap: 4px; 
+  font: 700 13px Nunito; text-align: left; transition: all 0.2s; 
+  box-shadow: var(--shadow-sm); overflow: hidden; 
+}
 .day:hover:not(.empty) { border-color: #94a3b8; transform: translateY(-1px); box-shadow: var(--shadow-md); cursor: pointer; }
 .day.empty { background: transparent; border: 0; box-shadow: none; pointer-events: none; }
 .day.today { border-color: var(--blu2); background: #f0f4ff; box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.1) inset; color: var(--blu2); }
-.day .count { background: var(--blu); color: #fff; border-radius: 20px; font-size: 12px; min-width: 24px; text-align: center; padding: 2px 6px; font-weight: 800; }
+.day .count { 
+  background: var(--blu); color: #fff; border-radius: 20px; 
+  font-size: 11px; min-width: 20px; text-align: center; padding: 2px 4px; font-weight: 800; 
+}
 .day .chip { display: none; }
 .chip { background: var(--blu2); color: #fff; border-radius: 6px; font-size: 11px; padding: 2px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; font-weight: 600; }
-@media(min-width: 700px){ .day { min-height: 100px; align-items: stretch; padding: 6px; } .day .count { display: none; } .day .chip { display: block; } }
+
+/* DISPONIBILITA' TEAM / COUNT */
+.avc { display: flex; gap: 4px; font-size: 11px; font-weight: 800; justify-content: center; }
+.avc .y { color: var(--ok); }
+.avc .n { color: var(--ko); }
+.pstat { font-size: 22px; font-weight: 800; margin-top: 2px; }
+.day.pstat-disponibile { background: #f0fdf4; border-color: #86efac; }
+.day.pstat-indisponibile { background: #fef2f2; border-color: #fca5a5; }
+.day.pstat-nessuna { background: #fffbeb; border-color: #fde047; }
 
 /* NOTIFICATIONS / BELL */
 .bell { 
@@ -211,10 +241,9 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   font-style: normal; font-weight: 800; border: 2px solid var(--blu); 
 }
 
+/* Modale delle Notifiche */
 .pop { 
-  position: fixed; /* Ritorno a fixed per stabilità su mobile */
-  right: 8px; left: 8px; /* Si adatta su schermi piccoli */
-  max-width: 380px; margin-left: auto; /* Limita la larghezza su PC */
+  position: fixed; right: 8px; left: 8px; max-width: 380px; margin-left: auto;
   top: calc(64px + env(safe-area-inset-top)); 
   background: #fff; color: var(--ink); 
   border-radius: var(--radius-lg); border: 1px solid var(--line); 
@@ -265,19 +294,28 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .matbox h4 { margin: 0 0 6px; font: 800 16px 'Baloo 2'; color: #854d0e; }
 .matbox .item { padding: 6px 0; flex-wrap: wrap; border-color: rgba(0,0,0,0.05); }
 
-/* DISPONIBILITA' TEAM / COUNT */
-.avc { display: flex; gap: 8px; font-size: 12px; font-weight: 800; justify-content: center; }
-.avc .y { color: var(--ok); }
-.avc .n { color: var(--ko); }
-.pstat { font-size: 22px; font-weight: 800; margin-top: 2px; }
-.day.pstat-disponibile { background: #f0fdf4; border-color: #86efac; }
-.day.pstat-indisponibile { background: #fef2f2; border-color: #fca5a5; }
-.day.pstat-nessuna { background: #fffbeb; border-color: #fde047; }
+/* CHIPS (Filtri) */
+.chips { display: flex; gap: 8px; overflow-x: auto; padding: 8px 2px; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.fchip { flex: none; min-height: 38px; padding: 6px 16px; border-radius: 20px; background: #fff; color: var(--blu); border: 1.5px solid var(--blu); font-weight: 800; font-size: 14px; cursor: pointer; transition: all 0.2s; box-shadow: var(--shadow-sm); }
+.fchip:hover:not(.on) { background: #f0f4ff; }
+.fchip.on { background: var(--blu); color: #fff; box-shadow: 0 4px 10px rgba(18, 48, 143, 0.2); }
+.tick { font-size: 18px; margin-right: 4px; }
+.steps { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
 
-/* REGOLE RESPONSIVE DESKTOP ( >= 900px ) */
+/* REGOLE RESPONSIVE DESKTOP ( >= 700px e 900px ) */
+@media(min-width: 700px){ 
+  .cal { gap: 6px; }
+  .cal .h { font-size: 13px; letter-spacing: 0.5px; }
+  .day { min-height: 100px; align-items: stretch; padding: 6px; font-size: 14.5px; } 
+  .day .count { display: none; } 
+  .day .chip { display: block; } 
+  .avc { gap: 8px; font-size: 13px; }
+}
+
 @media(min-width: 900px){
   header { 
-    display: flex; /* Torna in linea su Desktop */
+    display: flex; /* Su PC torna su una riga unica */
     align-items: center; gap: 12px; padding: 0 16px; min-height: 70px; 
   }
   .top { display: contents; }
@@ -298,21 +336,4 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   main { padding-bottom: 32px; }
   
   .day { min-height: 110px; }
-  .cal .avc { font-size: 13px; gap: 8px; }
-}
-
-/* CHIPS (Filtri) */
-.chips { display: flex; gap: 8px; overflow-x: auto; padding: 8px 2px; scrollbar-width: none; }
-.chips::-webkit-scrollbar { display: none; }
-.fchip { flex: none; min-height: 38px; padding: 6px 16px; border-radius: 20px; background: #fff; color: var(--blu); border: 1.5px solid var(--blu); font-weight: 800; font-size: 14px; cursor: pointer; transition: all 0.2s; box-shadow: var(--shadow-sm); }
-.fchip:hover:not(.on) { background: #f0f4ff; }
-.fchip.on { background: var(--blu); color: #fff; box-shadow: 0 4px 10px rgba(18, 48, 143, 0.2); }
-.tick { font-size: 18px; margin-right: 4px; }
-.steps { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
-
-/* LOGO HEADER */
-.top .logo {
-  max-height: 30px; 
-  width: auto;
-  object-fit: contain;
 }
